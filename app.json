@@ -14,10 +14,20 @@
       "fallbackToCacheTimeout": 0
     },
     "android": {
-      "package": "com.yourname.healthcareapp"
+      "package": "com.dineshnampally.healthcareapp",
+      "versionCode": 1
     },
     "ios": {
-      "bundleIdentifier": "com.yourname.healthcareapp"
-    }
+      "bundleIdentifier": "com.dineshnampally.healthcareapp",
+      "buildNumber": "1.0.0"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dfc401bc-2619-4d21-9517-102d7da5ed3b"
+      }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
