@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, ScrollView, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+const { width, height } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallScreen = width < 375;
 
 export default function ClaimFormScreen({ navigation }: any) {
   const [formData, setFormData] = useState({
@@ -64,32 +68,35 @@ export default function ClaimFormScreen({ navigation }: any) {
       <Text style={styles.stepTitle}>Provider Information</Text>
       
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Provider Name *</Text>
+        <Text style={[styles.label, { fontSize: isTablet ? 18 : 16 }]}>Provider Name *</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { fontSize: isTablet ? 18 : 16, height: isTablet ? 56 : 48 }]}
           placeholder="Enter provider name"
           value={formData.providerName}
           onChangeText={(value) => handleInputChange('providerName', value)}
+          returnKeyType="next"
         />
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Provider ID</Text>
+        <Text style={[styles.label, { fontSize: isTablet ? 18 : 16 }]}>Provider ID</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { fontSize: isTablet ? 18 : 16, height: isTablet ? 56 : 48 }]}
           placeholder="Enter provider ID (optional)"
           value={formData.providerId}
           onChangeText={(value) => handleInputChange('providerId', value)}
+          returnKeyType="next"
         />
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Service Date *</Text>
+        <Text style={[styles.label, { fontSize: isTablet ? 18 : 16 }]}>Service Date *</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { fontSize: isTablet ? 18 : 16, height: isTablet ? 56 : 48 }]}
           placeholder="YYYY-MM-DD"
           value={formData.serviceDate}
           onChangeText={(value) => handleInputChange('serviceDate', value)}
+          returnKeyType="done"
         />
       </View>
     </View>
@@ -205,13 +212,17 @@ export default function ClaimFormScreen({ navigation }: any) {
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1a1a1a" />
+          <Ionicons name="arrow-back" size={isTablet ? 28 : 24} color="#1a1a1a" />
         </TouchableOpacity>
-        <Text style={styles.title}>Submit New Claim</Text>
+        <Text style={[styles.title, { fontSize: isTablet ? 20 : 18 }]}>Submit New Claim</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -220,10 +231,15 @@ export default function ClaimFormScreen({ navigation }: any) {
         <View style={styles.progressBar}>
           <View style={[styles.progressFill, { width: `${(currentStep / totalSteps) * 100}%` }]} />
         </View>
-        <Text style={styles.progressText}>Step {currentStep} of {totalSteps}</Text>
+        <Text style={[styles.progressText, { fontSize: isTablet ? 14 : 12 }]}>Step {currentStep} of {totalSteps}</Text>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
         {currentStep === 1 && renderStep1()}
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
@@ -233,8 +249,8 @@ export default function ClaimFormScreen({ navigation }: any) {
       <View style={styles.navigationContainer}>
         {currentStep > 1 && (
           <TouchableOpacity style={styles.previousButton} onPress={handlePrevious}>
-            <Ionicons name="arrow-back" size={20} color="#2196F3" />
-            <Text style={styles.previousButtonText}>Previous</Text>
+            <Ionicons name="arrow-back" size={isTablet ? 24 : 20} color="#2196F3" />
+            <Text style={[styles.previousButtonText, { fontSize: isTablet ? 18 : 16 }]}>Previous</Text>
           </TouchableOpacity>
         )}
         
@@ -242,17 +258,17 @@ export default function ClaimFormScreen({ navigation }: any) {
         
         {currentStep < totalSteps ? (
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.nextButtonText}>Next</Text>
-            <Ionicons name="arrow-forward" size={20} color="white" />
+            <Text style={[styles.nextButtonText, { fontSize: isTablet ? 18 : 16 }]}>Next</Text>
+            <Ionicons name="arrow-forward" size={isTablet ? 24 : 20} color="white" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Ionicons name="checkmark" size={20} color="white" />
-            <Text style={styles.submitButtonText}>Submit Claim</Text>
+            <Ionicons name="checkmark" size={isTablet ? 24 : 20} color="white" />
+            <Text style={[styles.submitButtonText, { fontSize: isTablet ? 18 : 16 }]}>Submit Claim</Text>
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -2,7 +2,9 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallScreen = width < 375;
 
 export default function ProviderDetailsScreen({ route, navigation }: any) {
   const { provider } = route.params || { 
@@ -40,21 +42,32 @@ export default function ProviderDetailsScreen({ route, navigation }: any) {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.providerImage}>
-          <Text style={styles.providerEmoji}>{provider.image}</Text>
+      <View style={[styles.header, { padding: isTablet ? 24 : 20 }]}>
+        <View style={[styles.providerImage, { 
+          width: isTablet ? 100 : 80, 
+          height: isTablet ? 100 : 80,
+          borderRadius: isTablet ? 50 : 40
+        }]}>
+          <Text style={[styles.providerEmoji, { fontSize: isTablet ? 40 : 32 }]}>{provider.image}</Text>
         </View>
         <View style={styles.providerInfo}>
-          <Text style={styles.providerName}>{provider.name}</Text>
-          <Text style={styles.providerTitle}>{provider.title}</Text>
+          <Text style={[styles.providerName, { fontSize: isTablet ? 28 : 24 }]}>{provider.name}</Text>
+          <Text style={[styles.providerTitle, { fontSize: isTablet ? 18 : 16 }]}>{provider.title}</Text>
           <View style={styles.ratingContainer}>
-            <Ionicons name="star" size={16} color="#FFD700" />
-            <Text style={styles.rating}>{provider.rating}</Text>
-            <Text style={styles.reviews}>({provider.reviews} reviews)</Text>
+            <Ionicons name="star" size={isTablet ? 20 : 16} color="#FFD700" />
+            <Text style={[styles.rating, { fontSize: isTablet ? 18 : 16 }]}>{provider.rating}</Text>
+            <Text style={[styles.reviews, { fontSize: isTablet ? 16 : 14 }]}>({provider.reviews} reviews)</Text>
           </View>
         </View>
-        <View style={[styles.availabilityBadge, { backgroundColor: getStatusColor(provider.availability) + '20' }]}>
-          <Text style={[styles.availabilityText, { color: getStatusColor(provider.availability) }]}>
+        <View style={[styles.availabilityBadge, { 
+          backgroundColor: getStatusColor(provider.availability) + '20',
+          paddingHorizontal: isTablet ? 16 : 12,
+          paddingVertical: isTablet ? 8 : 6
+        }]}>
+          <Text style={[styles.availabilityText, { 
+            color: getStatusColor(provider.availability),
+            fontSize: isTablet ? 14 : 12
+          }]}>
             {provider.availability}
           </Text>
         </View>

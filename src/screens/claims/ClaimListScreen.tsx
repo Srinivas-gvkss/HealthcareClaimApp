@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallScreen = width < 375;
 
 const MOCK_CLAIMS = [
   { 
@@ -119,28 +121,28 @@ export default function ClaimListScreen({ navigation }: any) {
     <View style={styles.container}>
       {/* Header Stats */}
       <View style={styles.statsContainer}>
-        <View style={styles.statCard}>
-          <Text style={styles.statValue}>{MOCK_CLAIMS.length}</Text>
-          <Text style={styles.statLabel}>Total Claims</Text>
+        <View style={[styles.statCard, { padding: isTablet ? 20 : 16 }]}>
+          <Text style={[styles.statValue, { fontSize: isTablet ? 24 : 20 }]}>{MOCK_CLAIMS.length}</Text>
+          <Text style={[styles.statLabel, { fontSize: isTablet ? 14 : 12 }]}>Total Claims</Text>
         </View>
-        <View style={styles.statCard}>
-          <Text style={styles.statValue}>${totalAmount.toFixed(0)}</Text>
-          <Text style={styles.statLabel}>Total Amount</Text>
+        <View style={[styles.statCard, { padding: isTablet ? 20 : 16 }]}>
+          <Text style={[styles.statValue, { fontSize: isTablet ? 24 : 20 }]}>${totalAmount.toFixed(0)}</Text>
+          <Text style={[styles.statLabel, { fontSize: isTablet ? 14 : 12 }]}>Total Amount</Text>
         </View>
-        <View style={styles.statCard}>
-          <Text style={styles.statValue}>${approvedAmount.toFixed(0)}</Text>
-          <Text style={styles.statLabel}>Approved</Text>
+        <View style={[styles.statCard, { padding: isTablet ? 20 : 16 }]}>
+          <Text style={[styles.statValue, { fontSize: isTablet ? 24 : 20 }]}>${approvedAmount.toFixed(0)}</Text>
+          <Text style={[styles.statLabel, { fontSize: isTablet ? 14 : 12 }]}>Approved</Text>
         </View>
       </View>
 
       {/* Action Button */}
       <View style={styles.actionContainer}>
         <TouchableOpacity 
-          style={styles.submitButton}
+          style={[styles.submitButton, { paddingVertical: isTablet ? 20 : 16 }]}
           onPress={() => navigation.navigate('ClaimForm')}
         >
-          <Ionicons name="add" size={20} color="white" />
-          <Text style={styles.submitButtonText}>Submit New Claim</Text>
+          <Ionicons name="add" size={isTablet ? 24 : 20} color="white" />
+          <Text style={[styles.submitButtonText, { fontSize: isTablet ? 18 : 16 }]}>Submit New Claim</Text>
         </TouchableOpacity>
       </View>
 
@@ -151,13 +153,15 @@ export default function ClaimListScreen({ navigation }: any) {
             key={filter}
             style={[
               styles.filterChip,
-              selectedFilter === filter && styles.filterChipActive
+              selectedFilter === filter && styles.filterChipActive,
+              { paddingHorizontal: isTablet ? 20 : 16, paddingVertical: isTablet ? 12 : 8 }
             ]}
             onPress={() => setSelectedFilter(filter)}
           >
             <Text style={[
               styles.filterText,
-              selectedFilter === filter && styles.filterTextActive
+              selectedFilter === filter && styles.filterTextActive,
+              { fontSize: isTablet ? 16 : 14 }
             ]}>
               {filter}
             </Text>

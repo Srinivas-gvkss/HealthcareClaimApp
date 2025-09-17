@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallScreen = width < 375;
 
 const MOCK_PROVIDERS = [
   { 
@@ -113,17 +115,17 @@ export default function ProviderSearchScreen({ navigation }: any) {
     <View style={styles.container}>
       {/* Search Header */}
       <View style={styles.searchHeader}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+        <View style={[styles.searchContainer, { height: isTablet ? 56 : 48 }]}>
+          <Ionicons name="search" size={isTablet ? 24 : 20} color="#666" style={styles.searchIcon} />
           <TextInput 
-            style={styles.searchInput} 
+            style={[styles.searchInput, { fontSize: isTablet ? 18 : 16 }]} 
             placeholder="Search providers by name or specialty" 
             value={searchQuery} 
             onChangeText={setSearchQuery}
             onSubmitEditing={onSearch}
           />
           <TouchableOpacity onPress={onSearch} style={styles.searchButton}>
-            <Ionicons name="arrow-forward" size={20} color="#2196F3" />
+            <Ionicons name="arrow-forward" size={isTablet ? 24 : 20} color="#2196F3" />
           </TouchableOpacity>
         </View>
       </View>
@@ -135,7 +137,8 @@ export default function ProviderSearchScreen({ navigation }: any) {
             key={specialty}
             style={[
               styles.specialtyChip,
-              selectedSpecialty === specialty && styles.specialtyChipActive
+              selectedSpecialty === specialty && styles.specialtyChipActive,
+              { paddingHorizontal: isTablet ? 20 : 16, paddingVertical: isTablet ? 12 : 8 }
             ]}
             onPress={() => {
               setSelectedSpecialty(specialty);
@@ -144,7 +147,8 @@ export default function ProviderSearchScreen({ navigation }: any) {
           >
             <Text style={[
               styles.specialtyText,
-              selectedSpecialty === specialty && styles.specialtyTextActive
+              selectedSpecialty === specialty && styles.specialtyTextActive,
+              { fontSize: isTablet ? 16 : 14 }
             ]}>
               {specialty}
             </Text>
@@ -154,10 +158,10 @@ export default function ProviderSearchScreen({ navigation }: any) {
 
       {/* Results Header */}
       <View style={styles.resultsHeader}>
-        <Text style={styles.resultsCount}>{results.length} providers found</Text>
-        <TouchableOpacity style={styles.filterButton}>
-          <Ionicons name="options" size={16} color="#666" />
-          <Text style={styles.filterText}>Filter</Text>
+        <Text style={[styles.resultsCount, { fontSize: isTablet ? 18 : 16 }]}>{results.length} providers found</Text>
+        <TouchableOpacity style={[styles.filterButton, { paddingHorizontal: isTablet ? 16 : 12, paddingVertical: isTablet ? 10 : 6 }]}>
+          <Ionicons name="options" size={isTablet ? 20 : 16} color="#666" />
+          <Text style={[styles.filterText, { fontSize: isTablet ? 16 : 14 }]}>Filter</Text>
         </TouchableOpacity>
       </View>
 
@@ -168,29 +172,40 @@ export default function ProviderSearchScreen({ navigation }: any) {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity 
-            style={styles.providerCard} 
+            style={[styles.providerCard, { padding: isTablet ? 20 : 16 }]} 
             onPress={() => navigation.navigate('ProviderDetails', { provider: item })}
           >
             <View style={styles.providerHeader}>
-              <View style={styles.providerImage}>
-                <Text style={styles.providerEmoji}>{item.image}</Text>
+              <View style={[styles.providerImage, { 
+                width: isTablet ? 80 : 60, 
+                height: isTablet ? 80 : 60,
+                borderRadius: isTablet ? 40 : 30
+              }]}>
+                <Text style={[styles.providerEmoji, { fontSize: isTablet ? 32 : 24 }]}>{item.image}</Text>
               </View>
               <View style={styles.providerInfo}>
-                <Text style={styles.providerName}>{item.name}</Text>
-                <Text style={styles.providerTitle}>{item.title}</Text>
+                <Text style={[styles.providerName, { fontSize: isTablet ? 22 : 18 }]}>{item.name}</Text>
+                <Text style={[styles.providerTitle, { fontSize: isTablet ? 16 : 14 }]}>{item.title}</Text>
                 <View style={styles.ratingContainer}>
-                  <Ionicons name="star" size={14} color="#FFD700" />
-                  <Text style={styles.rating}>{item.rating}</Text>
-                  <Text style={styles.reviews}>({item.reviews} reviews)</Text>
+                  <Ionicons name="star" size={isTablet ? 18 : 14} color="#FFD700" />
+                  <Text style={[styles.rating, { fontSize: isTablet ? 16 : 14 }]}>{item.rating}</Text>
+                  <Text style={[styles.reviews, { fontSize: isTablet ? 14 : 12 }]}>({item.reviews} reviews)</Text>
                 </View>
               </View>
               <View style={styles.providerMeta}>
-                <View style={[styles.availabilityBadge, { backgroundColor: getStatusColor(item.availability) + '20' }]}>
-                  <Text style={[styles.availabilityText, { color: getStatusColor(item.availability) }]}>
+                <View style={[styles.availabilityBadge, { 
+                  backgroundColor: getStatusColor(item.availability) + '20',
+                  paddingHorizontal: isTablet ? 12 : 8,
+                  paddingVertical: isTablet ? 6 : 4
+                }]}>
+                  <Text style={[styles.availabilityText, { 
+                    color: getStatusColor(item.availability),
+                    fontSize: isTablet ? 14 : 12
+                  }]}>
                     {item.availability}
                   </Text>
                 </View>
-                <Text style={styles.distance}>{item.distance}</Text>
+                <Text style={[styles.distance, { fontSize: isTablet ? 14 : 12 }]}>{item.distance}</Text>
               </View>
             </View>
 

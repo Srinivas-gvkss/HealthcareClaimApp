@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, ScrollView, Alert, Dimensions } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallScreen = width < 375;
 
 export default function RoiCreateScreen({ navigation }: any) {
   const [formData, setFormData] = useState({
@@ -260,13 +262,17 @@ export default function RoiCreateScreen({ navigation }: any) {
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1a1a1a" />
+          <Ionicons name="arrow-back" size={isTablet ? 28 : 24} color="#1a1a1a" />
         </TouchableOpacity>
-        <Text style={styles.title}>Create ROI</Text>
+        <Text style={[styles.title, { fontSize: isTablet ? 20 : 18 }]}>Create ROI</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -275,10 +281,15 @@ export default function RoiCreateScreen({ navigation }: any) {
         <View style={styles.progressBar}>
           <View style={[styles.progressFill, { width: `${(currentStep / totalSteps) * 100}%` }]} />
         </View>
-        <Text style={styles.progressText}>Step {currentStep} of {totalSteps}</Text>
+        <Text style={[styles.progressText, { fontSize: isTablet ? 14 : 12 }]}>Step {currentStep} of {totalSteps}</Text>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
         {currentStep === 1 && renderStep1()}
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
@@ -289,8 +300,8 @@ export default function RoiCreateScreen({ navigation }: any) {
       <View style={styles.navigationContainer}>
         {currentStep > 1 && (
           <TouchableOpacity style={styles.previousButton} onPress={handlePrevious}>
-            <Ionicons name="arrow-back" size={20} color="#2196F3" />
-            <Text style={styles.previousButtonText}>Previous</Text>
+            <Ionicons name="arrow-back" size={isTablet ? 24 : 20} color="#2196F3" />
+            <Text style={[styles.previousButtonText, { fontSize: isTablet ? 18 : 16 }]}>Previous</Text>
           </TouchableOpacity>
         )}
         
@@ -298,17 +309,17 @@ export default function RoiCreateScreen({ navigation }: any) {
         
         {currentStep < totalSteps ? (
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.nextButtonText}>Next</Text>
-            <Ionicons name="arrow-forward" size={20} color="white" />
+            <Text style={[styles.nextButtonText, { fontSize: isTablet ? 18 : 16 }]}>Next</Text>
+            <Ionicons name="arrow-forward" size={isTablet ? 24 : 20} color="white" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-            <Ionicons name="shield-checkmark" size={20} color="white" />
-            <Text style={styles.createButtonText}>Create ROI</Text>
+            <Ionicons name="shield-checkmark" size={isTablet ? 24 : 20} color="white" />
+            <Text style={[styles.createButtonText, { fontSize: isTablet ? 18 : 16 }]}>Create ROI</Text>
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
